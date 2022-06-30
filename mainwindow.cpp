@@ -8,6 +8,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
+        //set visual
     setWindowTitle("Lab 3");
     setGeometry(0,0,1280,720);
     horizontalLayout = new QHBoxLayout(this);
@@ -21,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     splitterRight = new QSplitter;
     verticalLeftLayout->addWidget(splitterLeft);
     verticalRightLayout->addWidget(splitterRight);
-
+    
     directoryButton = new QPushButton ("Open directory");
     tableModel =  new QFileSystemModel(this);
     tableModel->setFilter(QDir::NoDotAndDotDot | QDir::AllEntries);
@@ -37,14 +38,14 @@ MainWindow::MainWindow(QWidget *parent)
     viewCombobox->insertItem(1, QString("Pie chart"));
     viewCombobox->insertItem(2, QString("Bar chart"));
     view = new QChartView;
-
+//add object ui
     splitterLeft->addWidget(tableView);
     verticalLeftLayout->addWidget(directoryButton);
     horizontalGraphSettingsLayout->addWidget(printButton);
     horizontalGraphSettingsLayout->addWidget(monohromchbox);
     horizontalGraphSettingsLayout->addWidget(viewCombobox);
     verticalRightLayout ->addWidget(view);
-
+//connect slot
     connect (directoryButton, SIGNAL(clicked()), this, SLOT(OpenDirectorySlot()));
     connect (printButton, SIGNAL(clicked()), this, SLOT(PrintCharSlot()));
     connect(selectionModel, SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this, SLOT(ChoseFileSlot(const QItemSelection &, const QItemSelection &)));
@@ -52,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect (viewCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeTypeSlot()));
 }
 
-void MainWindow::RepaintChart(QString path, QString type_in_combobox, bool bw)
+void MainWindow::RepaintChart(QString path, QString type_in_combobox, bool bw)//Repain graphs
 {
     isChartOpen = 0;
     bool isFindedType = 0;
@@ -73,7 +74,7 @@ void MainWindow::RepaintChart(QString path, QString type_in_combobox, bool bw)
         file_type_err.exec();
     }
     QString coloring = "";
-    if (isFindedType)
+    if (isFindedType)//check color type
     {
         if (bw)
             coloring = "bw";
@@ -97,7 +98,7 @@ void MainWindow::RepaintChart(QString path, QString type_in_combobox, bool bw)
             chart_type_err.setText("Unknown chart type");
             chart_type_err.exec();
         }
-        if (chartType != "" && isFindedType)
+        if (chartType != "" && isFindedType)//check view type
         {
             CreatroGraphs graph_generator;
             graph = graph_generator.GetGraph(
@@ -109,19 +110,19 @@ void MainWindow::RepaintChart(QString path, QString type_in_combobox, bool bw)
     }
 }
 
-void MainWindow::RecolorChareSlot ()
+void MainWindow::RecolorChareSlot ()//Recolor 
 {
     if (isChartOpen) RepaintChart(fileName, viewCombobox->currentText(), monohromchbox->checkState());
 }
 
-void  MainWindow::ChangeTypeSlot()
+void  MainWindow::ChangeTypeSlot()//Change type
 {
     if (isChartOpen) RepaintChart (fileName, viewCombobox->currentText(), monohromchbox->checkState());
 
 
 }
 
-void MainWindow::OpenDirectorySlot()
+void MainWindow::OpenDirectorySlot()//open directory
 {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::Directory);
@@ -131,30 +132,30 @@ void MainWindow::OpenDirectorySlot()
 
 void MainWindow::PrintCharSlot()
 {
-    QString saving_path (" ");
-    if (isChartOpen)
+    QString savingPath (" ");
+    if (isChartOpen)//check open
     {
         QFileDialog dialog(this);
         dialog.setFileMode(QFileDialog::Directory);
         if (dialog.exec())
-            saving_path = dialog.selectedFiles().first();
-        if (saving_path != "")
+            savingPath = dialog.selectedFiles().first();
+        if (savingPath != "")//print graph to pdf
         {
-            QPdfWriter writer (saving_path + "/out.pdf");
+            QPdfWriter writer (savingPath + "/out.pdf");
             writer.setCreator("Someone");
             writer.setPageSize(QPageSize::A4);
             QPainter painter(&writer);
             view->render(&painter);
             painter.end();
         }
-        else
+        else //can t way directore
         {
             QMessageBox nowae;
             nowae.setText("Cant open saving way");
             nowae.exec();
         }
         }
-        else
+        else//not chart
         {
             QMessageBox nowae;
             nowae.setText("No chart to print");
@@ -172,7 +173,6 @@ void MainWindow::ChoseFileSlot(const QItemSelection &selected, const QItemSelect
         QModelIndex ix =  indexs.constFirst();
         fileName = tableModel->filePath(ix);
     }
-
     if (fileName != "") RepaintChart(fileName, viewCombobox->currentText(), monohromchbox->checkState());
     else
     {
