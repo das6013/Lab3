@@ -7,11 +7,11 @@
 class Graph
 {
 private:
-    QChartView* view;
+    QChartView* view;//view
 public:
-    void SetGraphView (QChartView* _view) {view = _view;};
-    QChart* GetChart() {return view->chart();}
-    QChartView* GetGraphView () {return view;};
+    void SetGraphView (QChartView* _view) {view = _view;};//set view
+    QChart* GetChart() {return view->chart();}//get chart from view 
+    QChartView* GetGraphView () {return view;};//get view
 };
 
 #endif // GRAPH_H
