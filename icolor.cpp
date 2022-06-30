@@ -8,7 +8,7 @@ QList <QColor>* Colored::GetColors(int colorCont)
         int r = rand()%255;
         int g = rand()%255;
         int b = rand()%255;
-        colors->push_back(QColor(r,g,b)); //добавляем случайный цвет
+        colors->push_back(QColor(r,g,b)); //set random color is rgb
     }
     return colors;
 };
@@ -20,7 +20,7 @@ QList <QColor>* Monohrom::GetColors(int colorCont)
     for (int i = 0; i < colorCont; i++)
     {
         int color = rand()%255;
-        colors->push_back(QColor(color,color,color));
+        colors->push_back(QColor(color,color,color));//grey color
     }
     return colors;
 };
