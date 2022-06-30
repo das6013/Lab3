@@ -1,0 +1,4 @@
+#ifndef DICTONARYGRAPH_H
+#define DICTONARYGRAPH_H
+
+#endif // DICTONARYGRAPH_H
